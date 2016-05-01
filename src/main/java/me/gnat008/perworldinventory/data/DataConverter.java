@@ -83,17 +83,18 @@ public class DataConverter {
                 plugin.getGroupManager().addGroup(mvgroup.getName(), worlds);
             else
                 pwiGroup.addWorlds(worlds);
-
+        }
+        for (OfflinePlayer player1 : Bukkit.getOfflinePlayers()) {
+        	UUID playerId = player1.getUniqueId();
             for (ProfileType profileType : MV_PROFILETYPES) {
                 GameMode gameMode = GameMode.valueOf(profileType.getName());
-
-                for (OfflinePlayer player1 : Bukkit.getOfflinePlayers()) {
+            	for (WorldGroupProfile mvgroup : mvgroups) {
                     try {
                         PlayerProfile playerData = mvgroup.getPlayerData(profileType, player1);
                         if (playerData != null) {
                             JsonObject writable = serializeMVIToNewFormat(playerData);
 
-                            File file = serializer.getFile(gameMode, plugin.getGroupManager().getGroup(mvgroup.getName()), player1.getUniqueId());
+                            File file = serializer.getFile(gameMode, plugin.getGroupManager().getGroup(mvgroup.getName()), playerId);
                             if (!file.getParentFile().exists())
                                 file.getParentFile().mkdir();
                             if (!file.exists())
